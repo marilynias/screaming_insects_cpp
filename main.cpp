@@ -77,7 +77,7 @@ SDL_Window *gWindow = NULL;
 SDL_Renderer *gRenderer = NULL;
 
 // Scene textures
-LTexture gDotTexture;
+// LTexture gDotTexture;
 
 LTexture::LTexture()
 {
@@ -85,7 +85,7 @@ LTexture::LTexture()
     mTexture = NULL;
     mWidth = 0;
     mHeight = 0;
-    
+    loadFromFile("circle.bmp");
 }
 
 LTexture::~LTexture()
@@ -237,12 +237,16 @@ public:
     // The move_direction of the dot
     Vector2<float> move_direction;
 
+    // Color
+    int color[3] = {0,0,0};
+
     // Maximum axis move_direction of the dot
     static const int DOT_VEL = 10;
 
     // Initializes the variables
     Dot(int x, int y);
     Dot();
+    ~Dot();
 
     // Takes key presses and adjusts the dot's move_direction
     void handleEvent(SDL_Event &e);
@@ -261,7 +265,7 @@ private:
 };
 
 Dot::Dot(){
-    image = gDotTexture;
+    image = LTexture();
 
     // Initialize the offsets
     position.x = float(rand() % SCREEN_WIDTH);
@@ -275,7 +279,7 @@ Dot::Dot(){
 
 Dot::Dot(int x, int y)
 {
-    image = gDotTexture;
+    image = LTexture();
 
     // Initialize the offsets
     position.x = float(x);
@@ -286,6 +290,10 @@ Dot::Dot(int x, int y)
     move_direction.y = 1.;
 
     // std::printf("new_pos: %f", position. + move_direction);
+}
+
+Dot::~Dot(){
+    image.free();
 }
 
 void Dot::handleEvent(SDL_Event &e)
@@ -375,6 +383,7 @@ void Dot::move()
 void Dot::render()
 {
     // Show the dot
+    image.loadFromFile("circle.bmp");
     image.render(position.x, position.y);
 }
 
@@ -438,11 +447,11 @@ bool loadMedia()
     bool success = true;
 
     // Load dot texture
-    if (!gDotTexture.loadFromFile("circle.bmp"))
-    {
-        printf("Failed to load dot texture!\n");
-        success = false;
-    }
+    // if (!gDotTexture.loadFromFile("circle.bmp"))
+    // {
+    //     printf("Failed to load dot texture!\n");
+    //     success = false;
+    // }
 
     return success;
 }
@@ -450,7 +459,7 @@ bool loadMedia()
 void close()
 {
     // Free loaded images
-    gDotTexture.free();
+    // gDotTexture.free();
 
     // Destroy window
     SDL_DestroyRenderer(gRenderer);
@@ -486,7 +495,7 @@ int main(int argc, char *args[])
             SDL_Event e;
 
             // The dot that will be moving around on the screen
-            Dot dots[100];
+            Dot dots[10];
             // for (int i = 0; i < 10; i++)
             // {
             //     dots[i] = Dot();
@@ -521,7 +530,7 @@ int main(int argc, char *args[])
 
                 
                 dot.move();
-                dots[0].move();
+                // dots[0].move();
                     // for (Dot _dot : dots)
                     // {
                     //     // Move the dot
@@ -531,17 +540,19 @@ int main(int argc, char *args[])
                 SDL_SetRenderDrawColor(gRenderer, 0x55, 0x55, 0x55, 0xff);
                 SDL_RenderClear(gRenderer);
 
-                gDotTexture.setColor(r, g, b);
-                gDotTexture.render(50,50);
+                // gDotTexture.setColor(r, g, b);
+                // gDotTexture.render(50,50);
 
                 // Render objects
                 // dots.
-                // for (Dot _dot: dots){
-                //     // Move the dot
-                //     _dot.render();
-                // }
-                dots[0].render();
-                dot.render();
+                for (int i = 0; i < sizeof(dots); i++)
+                {
+                    dots[i].move();
+                    dots[i].render();
+                }
+                
+                // dots[0].render();
+                // dot.render();
 
                 // Update screen
                 SDL_RenderPresent(gRenderer);
