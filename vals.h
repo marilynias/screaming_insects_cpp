@@ -1,17 +1,27 @@
-#include <SDL.h>
+#ifndef VALS_H
+#define VALS_H
 
-// DEFS
-const int SCREEN_WIDTH = 1280;
-const int SCREEN_HEIGHT = 720;
+#include <SDL.h>
+#include "texture.h"
+
+class Color;
+
+// Screen dimension constants
+extern const int SCREEN_WIDTH;
+extern const int SCREEN_HEIGHT;
 
 // The window we'll be rendering to
-SDL_Window *gWindow = NULL;
-
-// The surface contained by the window
-SDL_Surface *gScreenSurface = NULL;
-
-// rect to draw
-SDL_Surface *gPlayer = NULL;
+extern SDL_Window *gWindow;
 
 // The window renderer
-SDL_Renderer *gRenderer = NULL;
+extern SDL_Renderer *gRenderer;
+
+extern const Color BLACK;
+extern const Color WHITE;
+extern const Color RED;
+extern const Color GREEN;
+extern const Color BLUE;
+
+extern LTexture gDotTexture;
+
+#endif
