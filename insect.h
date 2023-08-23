@@ -19,7 +19,8 @@ private:
     void move();
     void check_col_food();
     void check_oob();
-    
+    void set_drift();
+
     Group<Food *> *food_group;
     Food *target;
 
@@ -29,7 +30,9 @@ private:
     Vector2<float> _moveto_buffer;
     bool _do_shout = false;
 
-    int shout_distance = 30;
+    // variable speeds helps against clumping
+    const float SPEED = float(rand()) / float(RAND_MAX) + 3;
+    
 
     std::vector<Group<Insect *> *> groups;
 
@@ -48,12 +51,9 @@ public:
     void handleEvent(SDL_Event &e);
 
     // rotate drift
-    float drift = (rand() / RAND_MAX - .5) / 100;
+    float drift;
 
     void add_group(Group<Insect *> *group) {groups.push_back(group);}
-
-
-
 };
 
 #endif

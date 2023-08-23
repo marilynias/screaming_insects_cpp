@@ -13,8 +13,9 @@ and may not be redistributed without written permission.*/
 #include <string>
 #include <time.h>
 #include <algorithm>
-
-
+#include <SDL_ttf.h>
+#include <SDL_image.h>
+#include <SDL.h>
 
 int main(int argc, char *args[])
 {
@@ -32,21 +33,22 @@ int main(int argc, char *args[])
         }
         else
         {
-            // Main loop flag
-            bool quit = false;
-
-            // Event handler
-            SDL_Event e;
-
+            Uint64 frame_time = SDL_GetTicks();
+            Uint64 end = 0;
+            float elapsed=0;
+            SDL_Rect dest = {0, 0, 20, 20};
+            SDL_Texture *texture, *text;
             // The dot that will be moving around on the screen
-            Group<Insect*> dots;
+            Group<Insect *> dots;
             Group<Food*> foods;
             // Insect dots[100];
 
-            foods.add(new FoodA());
-            foods.add(new FoodB());
+            foods.add(new Food(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, food_rad, GREEN));
+            foods.add(new Food(SCREEN_WIDTH * 3 / 4, SCREEN_HEIGHT / 4, food_rad, BLUE));
+            // foods.add(new Food(SCREEN_WIDTH * 3 / 4, SCREEN_HEIGHT * 3 / 4, food_rad, YELLOW));
+            foods.add(new Food(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 3 / 4, food_rad, RED));
 
-            for (int i = 0; i < 500; i++)
+            for (int i = 0; i < num_insects; i++)
             {
                 // Insect *dot = new Insect();
                 dots.add(new Insect(foods));
@@ -56,30 +58,15 @@ int main(int argc, char *args[])
             while (!quit)
             {
                 Uint64 start = SDL_GetPerformanceCounter();
-                // Handle events on queue
-                while (SDL_PollEvent(&e) != 0)
-                {
-                    // User requests quit
-                    if (e.type == SDL_QUIT) {
-                        quit = true;
-                    } // On keypress change rgb values
-                    
-
-                    // Handle input for the dot
-                    // dot.handleEvent(e);
-                }
-
                 
-                // dot.move();
-                // dots[0].move();
-                    // for (Insect _dot : dots)
-                    // {
-                    //     // Move the dot
-                    //     _dot.move();
-                    // }
-                    // Clear screen
+
+                handle_events();
+                
+                // Clear screen to grey                
                 SDL_SetRenderDrawColor(gRenderer, 0x55, 0x55, 0x55, 0xff);
                 SDL_RenderClear(gRenderer);
+
+                // prepare different color for lines
                 SDL_SetRenderDrawColor(gRenderer, 0xff, 0xff, 0xff, 0xff);
 
                 dots.update();
@@ -97,12 +84,21 @@ int main(int argc, char *args[])
                 dots.draw();
                 foods.draw();
 
+                //fps counter
+                frame_time = SDL_GetTicks() - frame_time;
+                float fps = (frame_time > 0) ? 1000.0f / frame_time : 0.0f;
+                // SDL_Color foreground = {0, 0, 0};
+                // SDL_Color foreground = {0, 0, 0};
+                // SDL_Surface *text_surf = TTF_RenderText(Sans, std::to_string(end).c_str(), {0, 0, 0}, {255, 255, 255});
+                // text = SDL_CreateTextureFromSurface(gRenderer, text_surf);
+                // SDL_RenderCopy(gRenderer, text, NULL, &dest);
+
                 // Update screen
                 SDL_RenderPresent(gRenderer);
-                Uint64 end = SDL_GetPerformanceCounter();
-                float elapsed = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
+                end = SDL_GetPerformanceCounter();
+                elapsed = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
                 // float waitfor = floor(1000.f / 120.f - elapsed);
-                SDL_Delay(std::max(floor(1000.f / 60.f - elapsed), 0.f));
+                SDL_Delay(std::max(floor(1000.f / target_framerate - elapsed), 0.f));
             }
         }
     }

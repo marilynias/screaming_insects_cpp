@@ -46,8 +46,7 @@ protected:
     // Vals
     // The move_direction of the dot
 
-    // Maximum axis move_direction of the dot
-    int DOT_VEL = 5;
+    
 
     LTexture image;
 

@@ -3,6 +3,7 @@
 #include "vals.h"
 #include "classes.h"
 #include "group.h"
+#include "funcs.h"
 #include "Vector2.hpp"
 #include <algorithm>
 
@@ -20,6 +21,8 @@ Insect::Insect(Group<Food *> &foodGrp,
 {
     food_group = &foodGrp;
     target = food_group->at(random()%food_group->size());
+    image.setColor(target->color);
+    set_drift();
 
     for (auto i : foodGrp)
     {
@@ -58,7 +61,7 @@ void Insect::update()
 {
     move_direction.rotate(drift);
 
-    // Move the dot in the direction with the speed of DOT_VEL
+    // Move the dot in the direction with the speed of SPEED
     move();
     check_oob();
     check_col_food();
@@ -66,10 +69,10 @@ void Insect::update()
 
 void Insect::move()
 {
-    position += (move_direction * DOT_VEL);
+    position += (move_direction * SPEED);
     for (auto &[key, value] : targets)
     {
-        value+=DOT_VEL;
+        value += SPEED;
     }
 }
 
@@ -80,17 +83,15 @@ void Insect::check_col_food()
     {
         move_direction.x = -move_direction.x;
         move_direction.y = -move_direction.y;
-        // printf("collision: (%i,%i)\n",
-        //        (int)this->position.x,
-        //        (int)this->position.y);
+
         if (sprite == target)
         {
             // std::cout << "Hit my Target!!\n";
             targets[target] = 0;
             target = food_group->getNext(target);
             image.setColor(target->color);
-            _do_shout = true;
         }
+        _do_shout = true;
     }
 }
 
@@ -101,7 +102,7 @@ void Insect::check_oob()
     {
         // Move back
         move_direction.x = -move_direction.x;
-        drift = (rand() / RAND_MAX - .5) / 100;
+        set_drift();
     }
 
     // If the dot went too far up or down
@@ -109,7 +110,7 @@ void Insect::check_oob()
     {
         // Move back
         move_direction.y = -move_direction.y;
-        drift = (rand() / RAND_MAX - .5) / 100;
+        set_drift();
     }
 }
 
@@ -119,26 +120,30 @@ void Insect::shout()
     {
         Group<Insect*> *grp = groups[0];
         auto collided = grp->spriteCollide(this, shout_distance, 0);
+        // auto col_copy = collided;
+
+        // collided = filterVec(collided, [t = this->target](auto &elem){ return elem->target == t; });
+        // std::vector<Insect*> out;
+        // std::copy_if(collided.begin(), collided.end(), std::back_inserter(out), [t = this->target](auto &elem)
+        //              { return elem->target == t; });
+
         for (auto insect : collided)
         {
-            // if (insect->target == target)
-            // {
-                Targets copy;
-                int i = 0;
-                for (auto &[key, value] : targets)
+            Targets copy;
+            int i = 0;
+            for (auto &[key, value] : targets)
+            {
+                // if you have many targets only shout to a few of them
+                if (collided.size() < limit_shouts_when_above || random() % (collided.size() / num_shouted_to_when_limited) == 0)
                 {
-                    // if you have many targets only shout to a few of them
-                    if (collided.size() < 20 || random() % (collided.size()/5) == 0)
-                    {
-                        copy[key] = value + shout_distance;
-                    }
-                    i++;
+                    copy[key] = value + shout_distance;
                 }
-                insect->recieve_shout(copy, position);
-            // }
+                i++;
+            }
+            insect->recieve_shout(copy, position);
         }
         _do_shout = false;
-    }
+        }
 }
 
 void Insect::recieve_shout(Targets rTargets, Vector2<float> rDirection)
@@ -157,7 +162,7 @@ void Insect::handle_recieved_shouts()
 {
     for (auto &[key, value] : _targets_buffer)
     {
-        if(value < targets[key])
+        if (value < targets[key])
         {
             targets[key] = value;
             _do_shout = true;
@@ -170,6 +175,11 @@ void Insect::handle_recieved_shouts()
     }
 
     //reset buffers
-    _targets_buffer = targets + DOT_VEL;
+    _targets_buffer = targets + SPEED;
     _moveto_buffer.x = _moveto_buffer.y = 0;
+}
+
+void Insect::set_drift()
+{
+    drift = (float(rand()) / float(RAND_MAX) - .5) / 50.;
 }

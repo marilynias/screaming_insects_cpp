@@ -3,6 +3,36 @@
 #include "texture.h"
 #include "vals.h"
 
+SDL_Event e;
+
+void handle_events()
+{
+    // Handle events on queue
+    while (SDL_PollEvent(&e) != 0)
+    {
+        // User requests quit
+        if (e.type == SDL_QUIT)
+        {
+            quit = true;
+        } // On keypress change rgb values
+        else if (e.type == SDL_KEYDOWN){
+            if (e.key.keysym.sym == SDLK_PLUS || e.key.keysym.sym == SDLK_KP_PLUS)
+            {
+                target_framerate = std::min(target_framerate*2., 512.);
+                std::cout << target_framerate << "\n";
+            }
+            else if (e.key.keysym.sym == SDLK_MINUS || e.key.keysym.sym == SDLK_KP_MINUS)
+            {
+                target_framerate = std::max(target_framerate / 2., 2.);
+                std::cout << target_framerate << "\n";
+            } else{
+                std::cout << e.key.keysym.scancode << "\n";
+            }
+        }
+        
+    }
+}
+
 bool init()
 {
     // Initialization flag
@@ -97,4 +127,14 @@ void close()
 // random float between 0-1
 float rand1(){
     return float(rand()) / RAND_MAX;
+}
+
+template <typename T, typename Pred>
+auto filterVec(const std::vector<T> &vec, Pred p)
+{
+    {
+        std::vector<T> out;
+        std::copy_if(vec.begin(), vec.end(), std::back_inserter(out), p);
+        return out;
+    }
 }
