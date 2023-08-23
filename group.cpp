@@ -20,16 +20,18 @@ Group<T>::spriteCollide(Sprite *sprite, int r1, int r2)
     std::vector<T> collisions = {};
     
     r2 = r2 >= 0 ? r2 : sprite->radius;
+    Vector2<float> p2 = sprite->get_position();
     for (T item : *this)
     {
         r1 = r1 >= 0 ? r1 : item->radius;
-        // Sprite c1 =* item;
-        if (item != sprite && circles_collide(item->position.x + r1,
-                                              item->position.y + r1,
-                                              item->radius,
-                                              sprite->position.x + r2,
-                                              sprite->position.y + r2,
-                                              sprite->radius)) // && collisions.find(item2) != iterator)
+        Vector2<float> p1 = item -> get_position();        
+
+        if (item != sprite && circles_collide(p1.x + item->radius,
+                                           p1.y + item->radius,
+                                           r1,
+                                           p2.x + sprite->radius,
+                                           p2.y + sprite->radius,
+                                           r2))
         {
             collisions.push_back(item);
         }
@@ -52,14 +54,15 @@ Group<T>::groupCollide(Group<T> collideGrp, int r1, int r2)
             // Sprite c1 =* item;
             if (item != item2) // && collisions.find(item2) != iterator)
             {
-                
+                Vector2<float> p1 = item->get_position();
+                Vector2<float> p2 = item2->get_position();
                 r2 = r2 >= 0 ? r2 : item2->radius;
-                auto col = circles_collide(item->position.x + r1,
-                                           item->position.y + r1,
-                                           item->radius,
-                                           item2->position.x + r2,
-                                           item2->position.y + r2,
-                                           item2->radius);
+                auto col = circles_collide(p1.x + item->radius,
+                                           p1.y + item->radius,
+                                           r1,
+                                           p2.x + item2->radius,
+                                           p2.y + item2->radius,
+                                           r2);
                 if (col)
                 {
                     if (collisions.count(item2) == 0 or collisions[item2] != item)
@@ -83,10 +86,11 @@ Group<T>::groupCollide(Group<T> collideGrp, int r1, int r2)
 };
 
 template <class T>
-T Group<T>::getNext(T sprite){
+T Group<T>::getNext(T &sprite){
     T ret;
-    T back = std::vector<T>::back();
-    if (sprite == back)
+    auto testback = std::vector<T>::back();
+    auto testfront = std::vector<T>::front();
+    if (sprite == std::vector<T>::back())
     {
         ret = std::vector<T>::front();
     } else{
@@ -94,7 +98,7 @@ T Group<T>::getNext(T sprite){
         {
             if (this->at(i) == sprite)
             {
-                ret = this->at(i + 1);
+                ret = (this->at(i + 1));
                 break;
             }
         }

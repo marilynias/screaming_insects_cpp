@@ -10,7 +10,7 @@ class Sprite;
 
 bool circles_collide(float x1, float y1, float r1, float x2, float y2, float r2);
 
-template<class T>
+template<typename T>
 class Group : std::vector<T>
 {
     
@@ -38,22 +38,12 @@ public:
     };
     // auto a = std::vector<T>::at(1);
 
-    T getNext(T sprite);
+    T getNext(T &sprite);
 
-    T at(int i)
-    {
-        return std::vector<T>::at(i);
-    };
-
-    // T next(T prev)
-    // {
-
-    //     for (T i : this)
-    //     {
-    //         ;
-    //     }
-        
-    // };
+    T at(int i){return std::vector<T>::at(i);};
+    typename std::vector<T>::iterator begin() { return std::vector<T>::begin(); };
+    typename std::vector<T>::iterator end() { return std::vector<T>::end(); };
+    int size() { return std::vector<T>::size(); }
 
     void draw()
     {

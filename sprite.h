@@ -25,30 +25,22 @@ public:
     // Moves the dot
     virtual void update(){};
 
-    void add_group(Group<Insect*> *group)
-    {
-        groups.push_back(group);
-    }
+    virtual void add_group(Group<Insect*> *group){};
+    virtual void add_group(Group<Food*> *group){};
 
-    void add_group(Group<Food*> *group)
-    {
-        
-        groups.push_back(group);
-    }
+    auto getGroups(){return groups;};
 
-    auto getGroups()
-    {
-        return groups;
-    }
+    Vector2<float> get_position() { return position; }
 
+    int radius;
+    
+
+protected:
     // Vals
     // The X and Y offsets of the dot
     Vector2<float> position;
-
-    int radius;
     Vector2<float> move_direction;
 
-protected:
     virtual void move(){};
 
     // Vals

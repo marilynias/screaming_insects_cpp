@@ -10,6 +10,36 @@
 #include <vector>
 #include <map>
 
+Targets Targets::operator + (const int &right) const
+{
+    Targets temp(*this);
+    temp += right;
+    return temp;
+};
+Targets Targets::operator - (const int &right) const
+{
+    Targets temp(*this);
+    temp -= right;
+    return temp;
+};
+
+Targets Targets::operator+=(const int &right)
+{
+    for (auto &[key, value] : *this)
+    {
+        value += right;
+    }
+    return *this;
+};
+
+Targets Targets::operator-=(const int &right)
+{
+    for (auto &[key, value] : *this)
+    {
+        value -= right;
+    }
+    return *this;
+};
 
 Food::Food(int x, int y, int radius, Color color) : Sprite(x, y, radius)
 {
@@ -22,6 +52,8 @@ void Food::update()
     
     
 }
+
+
 
 // FoodA::FoodA(){};
 // FoodB::FoodB(){};

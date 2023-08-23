@@ -46,10 +46,10 @@ int main(int argc, char *args[])
             foods.add(new FoodA());
             foods.add(new FoodB());
 
-            for (int i = 0; i < 2000; i++)
+            for (int i = 0; i < 500; i++)
             {
                 // Insect *dot = new Insect();
-                dots.add(new Insect(&foods));
+                dots.add(new Insect(foods));
             }
 
             // While application is running
@@ -80,9 +80,19 @@ int main(int argc, char *args[])
                     // Clear screen
                 SDL_SetRenderDrawColor(gRenderer, 0x55, 0x55, 0x55, 0xff);
                 SDL_RenderClear(gRenderer);
+                SDL_SetRenderDrawColor(gRenderer, 0xff, 0xff, 0xff, 0xff);
 
                 dots.update();
                 foods.update();
+
+                for (auto dot : dots)
+                {
+                    dot->shout();
+                }
+                for (auto dot : dots)
+                {
+                    dot->handle_recieved_shouts();
+                }
 
                 dots.draw();
                 foods.draw();
@@ -92,7 +102,7 @@ int main(int argc, char *args[])
                 Uint64 end = SDL_GetPerformanceCounter();
                 float elapsed = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
                 // float waitfor = floor(1000.f / 120.f - elapsed);
-                SDL_Delay(std::max(floor(1000.f / 120.f - elapsed), 0.f));
+                SDL_Delay(std::max(floor(1000.f / 60.f - elapsed), 0.f));
             }
         }
     }

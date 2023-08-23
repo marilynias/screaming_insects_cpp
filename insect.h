@@ -3,7 +3,7 @@
 
 
 #include "sprite.h"
-// #include "classes.h"
+#include "classes.h"
 #include "group.h"
 #include "vals.h"
 
@@ -15,14 +15,34 @@ class Food;
 // The dot that will move around on the screen
 class Insect : public Sprite
 {
+private:
+    void move();
+    void check_col_food();
+    void check_oob();
+    
+    Group<Food *> *food_group;
+    Food *target;
+
+    Targets targets;
+
+    Targets _targets_buffer;
+    Vector2<float> _moveto_buffer;
+    bool _do_shout = false;
+
+    int shout_distance = 30;
+
+    std::vector<Group<Insect *> *> groups;
+
 public:
-    Insect(Group<Food *> *foodGrp, int x, int y, int radius);
+    Insect(Group<Food *> &foodGrp, int x, int y, int radius);
+    Insect(Group<Food *> &foodGrp);
 
-    Insect(Group<Food *> *foodGrp);
-
+    // things to do in the main loop
     void update();
+    void handle_recieved_shouts();
+    void shout();
 
-    void recieve_shout(int d0, int d1, Vector2<float> direction);
+    void recieve_shout(Targets direction, Vector2<float> position);
 
     // Takes key presses and adjusts the dot's move_direction
     void handleEvent(SDL_Event &e);
@@ -30,27 +50,10 @@ public:
     // rotate drift
     float drift = (rand() / RAND_MAX - .5) / 100;
 
+    void add_group(Group<Insect *> *group) {groups.push_back(group);}
 
-    // Insect(Group<Food*> *foodGrp) : Sprite(rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, 0) {
-    //     food_group = foodGrp;
-    // target = foodGrp->at(0);
-    // }
-    
 
-private:
-    void move();
-    void check_col_food();
-    void check_oob();
-    void shout();
 
-    Group<Food *> *food_group;
-    Food *target;
-
-    int distance0=1000;
-    int distance1=1000;
-    int shout_distance = 20;
-
-    // std::vector<Group<Sprite*>*> groups;
 };
 
 #endif
