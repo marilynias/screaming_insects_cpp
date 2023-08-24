@@ -7,6 +7,7 @@
 #include "Vector2.hpp"
 #include <algorithm>
 
+using namespace std;
 // forward declaration
 // class Sprite;
 
@@ -26,7 +27,7 @@ Insect::Insect(Group<Food *> &foodGrp,
 
     for (auto i : foodGrp)
     {
-        targets.insert(std::pair<Food*, int>(i, 1000));
+        targets.insert(pair<Food*, int>(i, 1000));
     }
     
 }
@@ -39,20 +40,20 @@ void Insect::handleEvent(SDL_Event &e)
 {
     if (e.type == SDL_MOUSEBUTTONDOWN)
     {
-        std::printf("mouse %i pressed\n", e.button.button);
-        std::printf("clicks: %i \n", e.button.clicks);
-        std::printf("state: %i \n", e.button.state);
-        std::printf("x: %i \n", e.button.x);
-        std::printf("y: %i \n", e.button.y);
+        printf("mouse %i pressed\n", e.button.button);
+        printf("clicks: %i \n", e.button.clicks);
+        printf("state: %i \n", e.button.state);
+        printf("x: %i \n", e.button.x);
+        printf("y: %i \n", e.button.y);
     }
     else if (e.type == SDL_MOUSEMOTION && e.motion.state == 1)
     {
         position.x = e.motion.x - image.getWidth() / 2;
         position.y = e.motion.y - image.getHeight() / 2;
 
-        std::printf("state: %i \n", e.motion.state);
-        std::printf("x: %i \n", e.motion.x);
-        std::printf("y: %i \n", e.motion.y);
+        printf("state: %i \n", e.motion.state);
+        printf("x: %i \n", e.motion.x);
+        printf("y: %i \n", e.motion.y);
         // e.motion.
     }
 }
@@ -86,7 +87,7 @@ void Insect::check_col_food()
 
         if (sprite == target)
         {
-            // std::cout << "Hit my Target!!\n";
+            // cout << "Hit my Target!!\n";
             targets[target] = 0;
             target = food_group->getNext(target);
             image.setColor(target->color);
@@ -123,8 +124,8 @@ void Insect::shout()
         // auto col_copy = collided;
 
         // collided = filterVec(collided, [t = this->target](auto &elem){ return elem->target == t; });
-        // std::vector<Insect*> out;
-        // std::copy_if(collided.begin(), collided.end(), std::back_inserter(out), [t = this->target](auto &elem)
+        // vector<Insect*> out;
+        // copy_if(collided.begin(), collided.end(), back_inserter(out), [t = this->target](auto &elem)
         //              { return elem->target == t; });
 
         for (auto insect : collided)

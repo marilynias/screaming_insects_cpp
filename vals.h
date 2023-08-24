@@ -8,15 +8,16 @@
 class Color;
 
 // Screen dimension constants
-extern const int SCREEN_WIDTH;
-extern const int SCREEN_HEIGHT;
+extern int SCREEN_WIDTH;
+extern int SCREEN_HEIGHT;
 
 // values to tinker (insect related)
-extern const int num_insects;
-extern const int shout_distance;
-extern const int limit_shouts_when_above;
-extern const int num_shouted_to_when_limited;
-extern const int food_rad;
+extern int num_insects;
+extern int shout_distance;
+extern int limit_shouts_when_above;
+extern int num_shouted_to_when_limited;
+extern int food_rad;
+extern int num_food;
 
 // The window we'll be rendering to
 extern SDL_Window *gWindow;
@@ -24,12 +25,12 @@ extern SDL_Window *gWindow;
 // The window renderer
 extern SDL_Renderer *gRenderer;
 
-extern const Color BLACK;
-extern const Color WHITE;
-extern const Color RED;
-extern const Color GREEN;
-extern const Color BLUE;
-extern const Color YELLOW;
+extern Color BLACK;
+extern Color WHITE;
+extern Color RED;
+extern Color GREEN;
+extern Color BLUE;
+extern Color YELLOW;
 
 extern LTexture gDotTexture;
 

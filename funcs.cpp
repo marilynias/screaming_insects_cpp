@@ -3,7 +3,69 @@
 #include "texture.h"
 #include "vals.h"
 
+#include <fstream>
+#include <string>
+
+using std::map, std::string, std::vector, std::cout, std::stoi;
+
 SDL_Event e;
+
+auto get_config()
+{
+    std::ifstream cFile("config.cfg");
+    map<string, string> config;
+    if (cFile.is_open())
+    {
+        string line;
+
+        while (getline(cFile, line))
+        {
+            // remove whitespaces
+            line.erase(std::remove_if(line.begin(), line.end(), isspace),
+                       line.end());
+
+            // ignore comments or empty lines
+            if (line[0] == '#' || line.empty())
+                continue;
+            auto delimiterPos = line.find("=");
+            auto name = line.substr(0, delimiterPos);
+            auto value = line.substr(delimiterPos + 1);
+            config.insert(std::pair<string, string>(name, value));
+            cout << name << " " << value << '\n';
+
+            // why cant you switch/case string values???
+            if (name == "num_insects")
+            {
+                num_insects = stoi(value);
+            }
+            else if (name == "shout_distance")
+            {
+                shout_distance = stoi(value);
+            }
+            else if (name == "limit_shouts_when_above")
+            {
+                limit_shouts_when_above = stoi(value);
+            }
+            else if (name == "num_shouted_to_when_limited")
+            {
+                num_shouted_to_when_limited = stoi(value);
+            }
+            else if (name == "food_rad")
+            {
+                food_rad = stoi(value);
+            }
+            else if (name == "SCREEN_WIDTH")
+            {
+                SCREEN_WIDTH = stoi(value);
+            }
+            else if (name == "SCREEN_HEIGHT")
+            {
+                SCREEN_HEIGHT = stoi(value);
+            }
+        }
+    }
+    return config;
+}
 
 void handle_events()
 {
@@ -18,15 +80,15 @@ void handle_events()
         else if (e.type == SDL_KEYDOWN){
             if (e.key.keysym.sym == SDLK_PLUS || e.key.keysym.sym == SDLK_KP_PLUS)
             {
-                target_framerate = std::min(target_framerate*2., 512.);
-                std::cout << target_framerate << "\n";
+                target_framerate = std::min(target_framerate*2., 1024.);
+                cout << target_framerate << "\n";
             }
             else if (e.key.keysym.sym == SDLK_MINUS || e.key.keysym.sym == SDLK_KP_MINUS)
             {
                 target_framerate = std::max(target_framerate / 2., 2.);
-                std::cout << target_framerate << "\n";
+                cout << target_framerate << "\n";
             } else{
-                std::cout << e.key.keysym.scancode << "\n";
+                cout << e.key.keysym.scancode << "\n";
             }
         }
         
@@ -37,6 +99,9 @@ bool init()
 {
     // Initialization flag
     bool success = true;
+
+    auto config = get_config();
+    // extern int num_insects = config.find("num_insects") != config.end() ? std::stoi(config["num_insects"]): 500;
 
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -130,11 +195,12 @@ float rand1(){
 }
 
 template <typename T, typename Pred>
-auto filterVec(const std::vector<T> &vec, Pred p)
+auto filterVec(vector<T> &vec, Pred p)
 {
     {
-        std::vector<T> out;
+        vector<T> out;
         std::copy_if(vec.begin(), vec.end(), std::back_inserter(out), p);
         return out;
     }
 }
+

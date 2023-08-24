@@ -6,19 +6,21 @@
 #include <map>
 #include <algorithm>
 
+using std::vector;
+
 class Sprite;
 
 bool circles_collide(float x1, float y1, float r1, float x2, float y2, float r2);
 
 template<typename T>
-class Group : std::vector<T>
+class Group : vector<T>
 {
     
 public:
-    // std::vector<Sprite*> items;
-    // Group() : std::vector<Sprite *>();
+    // vector<Sprite*> items;
+    // Group() : vector<Sprite *>();
     // static_assert(std::is_base_of<Sprite, T>::value, "T must inherit from list");
-    std::vector<T> spriteCollide(Sprite *sprite, int r1=-1, int r2=-1);
+    vector<T> spriteCollide(Sprite *sprite, int r1=-1, int r2=-1);
     std::map<T, Sprite *> groupCollide(Group collideGrp, int r1 = -1, int r2 = -1);
 
     // void push_back();
@@ -28,22 +30,22 @@ public:
         if (!contains(sprite))
         {
             sprite->add_group(this);
-            std::vector<T>::push_back(sprite);
+            vector<T>::push_back(sprite);
         }
     };
 
     bool contains(T sprite)
     {
-        return std::find(std::vector<T>::begin(), std::vector<T>::end(), sprite) != std::vector<T> ::end();
+        return std::find(vector<T>::begin(), vector<T>::end(), sprite) != vector<T> ::end();
     };
-    // auto a = std::vector<T>::at(1);
+    // auto a = vector<T>::at(1);
 
     T getNext(T &sprite);
 
-    T at(int i){return std::vector<T>::at(i);};
-    typename std::vector<T>::iterator begin() { return std::vector<T>::begin(); };
-    typename std::vector<T>::iterator end() { return std::vector<T>::end(); };
-    int size() { return std::vector<T>::size(); }
+    T at(int i){return vector<T>::at(i);};
+    typename vector<T>::iterator begin() { return vector<T>::begin(); };
+    typename vector<T>::iterator end() { return vector<T>::end(); };
+    int size() { return vector<T>::size(); }
 
     void draw()
     {

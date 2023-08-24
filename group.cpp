@@ -8,16 +8,18 @@
 #include <map>
 #include <algorithm>
 
+using std::map, std::vector;
+
 bool circles_collide(float x1, float y1, float r1, float x2, float y2, float r2)
 {
     return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) <= (r1 + r2) * (r1 + r2);
 }
 
 template <class T>
-std::vector<T>
+vector<T>
 Group<T>::spriteCollide(Sprite *sprite, int r1, int r2)
 {
-    std::vector<T> collisions = {};
+    vector<T> collisions = {};
     
     r2 = r2 >= 0 ? r2 : sprite->radius;
     Vector2<float> p2 = sprite->get_position();
@@ -41,10 +43,10 @@ Group<T>::spriteCollide(Sprite *sprite, int r1, int r2)
 
 
 template <class T>
-std::map<T, Sprite *>
+map<T, Sprite *>
 Group<T>::groupCollide(Group<T> collideGrp, int r1, int r2)
 {
-    std::map<T, Sprite *> collisions = {};
+    map<T, Sprite *> collisions = {};
     for (T item : *this)
     {
         r1 = r1 >= 0 ? r1 : item->radius;
@@ -88,13 +90,13 @@ Group<T>::groupCollide(Group<T> collideGrp, int r1, int r2)
 template <class T>
 T Group<T>::getNext(T &sprite){
     T ret;
-    auto testback = std::vector<T>::back();
-    auto testfront = std::vector<T>::front();
-    if (sprite == std::vector<T>::back())
+    auto testback = vector<T>::back();
+    auto testfront = vector<T>::front();
+    if (sprite == vector<T>::back())
     {
-        ret = std::vector<T>::front();
+        ret = vector<T>::front();
     } else{
-        for (int i = 0; i <= std::vector<T>::size(); i++)
+        for (int i = 0; i <= vector<T>::size(); i++)
         {
             if (this->at(i) == sprite)
             {

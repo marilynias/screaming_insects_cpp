@@ -1,6 +1,6 @@
 #include "texture.h"
 #include "vector"
-
+#include <map>
 
 
 void handle_events();
@@ -16,3 +16,5 @@ float rand1();
 
 template <typename T, typename Pred>
 auto filterVec(const std::vector<T> &vec, Pred p);
+
+auto get_config();

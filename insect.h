@@ -8,7 +8,7 @@
 #include "vals.h"
 
 #include <algorithm>
-
+using namespace std;
 
 class Food;
 // class Sprite;
@@ -34,7 +34,7 @@ private:
     const float SPEED = float(rand()) / float(RAND_MAX) + 3;
     
 
-    std::vector<Group<Insect *> *> groups;
+    vector<Group<Insect *> *> groups;
 
 public:
     Insect(Group<Food *> &foodGrp, int x, int y, int radius);
