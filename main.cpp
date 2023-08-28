@@ -45,10 +45,13 @@ int main(int argc, char *args[])
             Group<Food*> foods;
             // Insect insects[100];
 
-            foods.add(new Food(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, food_rad, GREEN));
-            foods.add(new Food(SCREEN_WIDTH * 3 / 4, SCREEN_HEIGHT / 4, food_rad, BLUE));
-            // foods.add(new Food(SCREEN_WIDTH * 3 / 4, SCREEN_HEIGHT * 3 / 4, food_rad, YELLOW));
-            // foods.add(new Food(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 3 / 4, food_rad, RED));
+            
+            // int i = 0;
+            // for (auto &[key, value] : colors)
+            // {
+            //     i++;
+            // }
+            place_food(&foods, num_food, 200);
 
             for (int i = 0; i < num_insects; i++)
             {
@@ -70,6 +73,8 @@ int main(int argc, char *args[])
 
                 // prepare different color for lines
                 SDL_SetRenderDrawColor(gRenderer, 0xff, 0xff, 0xff, 0xff);
+
+                DrawCircle(gRenderer, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 200);
 
                 insects.update();
                 foods.update();

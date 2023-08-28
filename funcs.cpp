@@ -5,6 +5,7 @@
 
 #include <fstream>
 #include <string>
+#include <math.h>
 
 using std::map, std::string, std::vector, std::cout, std::stoi;
 
@@ -61,6 +62,14 @@ auto get_config()
             else if (name == "SCREEN_HEIGHT")
             {
                 SCREEN_HEIGHT = stoi(value);
+            }
+            else if (name == "num_food")
+            {
+                num_food = stoi(value);
+            }
+            else if (name == "food_spawn_rad")
+            {
+                food_spawn_rad = stoi(value);
             }
         }
     }
@@ -185,6 +194,25 @@ void close()
     SDL_Quit();
 }
 
+void place_food(Group<Food *> *foodGrp, int n, int r)
+{
+    double min_rad = 2 * M_PI / n;
+    Colors clrs = colors;
+
+    for (int i = 0; i<n; i++)
+    {
+        double t = min_rad*i;
+        float x = (r * cos(t)) + (SCREEN_WIDTH / 2) - food_rad;
+        float y = (r * sin(t)) + (SCREEN_HEIGHT / 2) - food_rad;
+        Color color = pop_random_color(&clrs);
+        foodGrp->add(new Food(x, y, food_rad, color));
+        // foodGrp.add(new Food(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, food_rad, colors["green"]));
+        // foodGrp.add(new Food(SCREEN_WIDTH * 3 / 4, SCREEN_HEIGHT / 4, food_rad, colors["blue"]));
+    }
+    
+    // foods.add(new Food(SCREEN_WIDTH * 3 / 4, SCREEN_HEIGHT * 3 / 4, food_rad, YELLOW));
+    // foods.add(new Food(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 3 / 4, food_rad, RED));
+}
 // void handle_collisions(Group grp1, Group grp2){
 
 // };
@@ -204,3 +232,48 @@ auto filterVec(vector<T> &vec, Pred p)
     }
 }
 
+void DrawCircle(SDL_Renderer *renderer, int32_t centreX, int32_t centreY, int32_t radius)
+{
+    const int32_t diameter = (radius * 2);
+
+    int32_t x = (radius - 1);
+    int32_t y = 0;
+    int32_t tx = 1;
+    int32_t ty = 1;
+    int32_t error = (tx - diameter);
+
+    while (x >= y)
+    {
+        // Each of the following renders an octant of the circle
+        SDL_RenderDrawPoint(renderer, centreX + x, centreY - y);
+        SDL_RenderDrawPoint(renderer, centreX + x, centreY + y);
+        SDL_RenderDrawPoint(renderer, centreX - x, centreY - y);
+        SDL_RenderDrawPoint(renderer, centreX - x, centreY + y);
+        SDL_RenderDrawPoint(renderer, centreX + y, centreY - x);
+        SDL_RenderDrawPoint(renderer, centreX + y, centreY + x);
+        SDL_RenderDrawPoint(renderer, centreX - y, centreY - x);
+        SDL_RenderDrawPoint(renderer, centreX - y, centreY + x);
+
+        if (error <= 0)
+        {
+            ++y;
+            error += ty;
+            ty += 2;
+        }
+
+        if (error > 0)
+        {
+            --x;
+            tx += 2;
+            error += (tx - diameter);
+        }
+    }
+}
+
+Color pop_random_color(Colors *clrs)
+{
+    int rnd = rand() % clrs->all_colors.size();
+    Color el = clrs->all_colors[rnd];
+    clrs->all_colors.erase(clrs->all_colors.begin() + rnd);
+    return el;
+}

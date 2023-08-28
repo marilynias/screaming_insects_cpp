@@ -1,15 +1,12 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-
-// #include "classes.h"
 // #include "vals.h"
-
+// #include "classes.h"
 #include <SDL.h>
 #include <SDL_image.h>
-#include "string"
-
-class Color;
+#include <string>
+#include <array>
 
 // Texture wrapper class
 class LTexture
@@ -29,7 +26,7 @@ public:
 
     // Set color modulation
     void setColor(Uint8 red, Uint8 green, Uint8 blue);
-    void setColor(Color color);
+    void setColor(std::array<Uint8, 3> color);
 
     // Set blending
     void setBlendMode(SDL_BlendMode blending);

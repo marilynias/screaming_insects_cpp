@@ -131,12 +131,18 @@ void Insect::shout()
         for (auto insect : collided)
         {
             Targets copy;
+            std::vector<Insect*> tList;
+
             int i = 0;
             for (auto &[key, value] : targets)
             {
                 // if you have many targets only shout to a few of them
                 if (collided.size() < limit_shouts_when_above || random() % (collided.size() / num_shouted_to_when_limited) == 0)
                 {
+                    if (std::count(tList.begin(), tList.end(), insect) == 0)
+                    {
+                        tList.push_back(insect);
+                    }
                     copy[key] = value + shout_distance;
                 }
                 i++;
@@ -182,5 +188,5 @@ void Insect::handle_recieved_shouts()
 
 void Insect::set_drift()
 {
-    drift = (float(rand()) / float(RAND_MAX) - .5) / 50.;
+    drift = (float(rand()) / float(RAND_MAX) - .5) / 57.3;
 }

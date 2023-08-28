@@ -9,7 +9,7 @@
                 "-g",
                 "${workspaceFolder}/**.cpp",
                 "-o",
-                "${workspaceFolder}/main",
+                "${workspaceFolder}/main.exe",
                 "-lSDL2_image",
                 "`pkg-config sdl2 --cflags --libs`"
             ],

@@ -1,12 +1,14 @@
 #include "texture.h"
 #include "classes.h"
+#include "vals.h"
 
 #include <SDL.h>
 #include <SDL_image.h>
 #include <string>
 #include <stdio.h>
 
-class Color;
+
+// class Color;
 // Texture wrapper class
 LTexture::LTexture()
 {
@@ -84,7 +86,7 @@ void LTexture::setColor(Uint8 red, Uint8 green, Uint8 blue)
 void LTexture::setColor(Color color)
 {
     // Modulate texture rgb
-    SDL_SetTextureColorMod(mTexture, color.r, color.g, color.b);
+    SDL_SetTextureColorMod(mTexture, color[0], color[1], color[2]);
 }
 
 void LTexture::setBlendMode(SDL_BlendMode blending)

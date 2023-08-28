@@ -8,7 +8,8 @@ int limit_shouts_when_above = 40;
 // make sure its always smaller then limit_shouts_when_above
 int num_shouted_to_when_limited = limit_shouts_when_above;
 int food_rad = 15;
-int num_food = 2
+int food_spawn_rad = 200;
+int num_food = 2;
 
 // Screen dimension constants
 int SCREEN_WIDTH = 640;
@@ -20,16 +21,34 @@ SDL_Window *gWindow = NULL;
 // The window renderer
 SDL_Renderer *gRenderer = NULL;
 
-Color BLACK = {r : 0, g : 0, b : 0};
-Color WHITE = {r : 255, g : 255, b : 255};
-Color RED = {r:255, g:0, b:0};
-Color GREEN = {r : 0, g : 255, b : 0};
-Color BLUE = {r : 0, g : 0, b : 255};
-Color YELLOW = {r : 255, g : 255, b : 0};
-
 bool quit = false;
 float target_framerate = 32.;
 
 LTexture gDotTexture;
 
+
+
+Colors colors = {
+    .black = {0, 0, 0},
+    .white = {255, 255, 255},
+    .red = {255, 0, 0},
+    .green = {0, 255, 0},
+    .blue = {0, 0, 255},
+    .yellow = {255, 255, 0},
+    .all_colors = {
+        {0, 0, 0},
+        {255, 255, 255},
+        {255, 0, 0},
+        {0, 255, 0},
+        {0, 0, 255},
+        {255, 255, 0}}
+
+};
+// {
+//     {"black", {0, 0, 0}},
+//     {"white", {255, 255, 255}},
+//     {"red", {255, 0, 0}},
+//     {"green", {0, 255, 0}},
+//     {"blue", {0, 0, 255}},
+//     {"yellow", {255, 255, 0}}};
 // TTF_Font *Sans = TTF_OpenFont("Sans.ttf", 24);
