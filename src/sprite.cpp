@@ -10,7 +10,7 @@ void Sprite::draw()
 
 Sprite::Sprite(int x = 0, int y = 0, int radius = 0)
 {
-    image.loadFromFile("circle.bmp");
+    image.loadFromFile("media/circle.bmp");
 
     // Initialize the offsets
     position.x = float(x);

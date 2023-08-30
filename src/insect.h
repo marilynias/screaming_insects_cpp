@@ -23,6 +23,7 @@ private:
 
     Group<Food *> *food_group;
     Food *target;
+    Food *last_target;
 
     Targets targets;
 

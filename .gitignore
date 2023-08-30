@@ -1,2 +1,6 @@
 main
 .boost/
+perf.data*
+gmon*
+gprof*
+*.exe

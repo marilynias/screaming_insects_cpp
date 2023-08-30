@@ -169,7 +169,7 @@ bool loadMedia()
     bool success = true;
 
     // Load dot texture
-    if (!gDotTexture.loadFromFile("circle.bmp"))
+    if (!gDotTexture.loadFromFile("media/circle.bmp"))
     {
         printf("Failed to load dot texture!\n");
         success = false;

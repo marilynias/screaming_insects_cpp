@@ -82,13 +82,25 @@ void Insect::check_col_food()
     // for (auto &&cSprite : food_group->groupCollide(*(this->getGroups()[0]), 0, 0))
     for (auto *sprite : food_group->spriteCollide(this, -1, -1))
     {
-        move_direction.x = -move_direction.x;
-        move_direction.y = -move_direction.y;
+        if(num_food == 2)
+        {
+            move_direction.x = -move_direction.x;
+            move_direction.y = -move_direction.y;
+        }
+        else if (abs(move_direction.x) > move_direction.y)
+        {
+            move_direction.y = -move_direction.y;
+        }
+        else if (abs(move_direction.y) > move_direction.x)
+        {
+            move_direction.x = -move_direction.x;
+        }
 
         if (sprite == target)
         {
             // cout << "Hit my Target!!\n";
             targets[target] = 0;
+            last_target = target;
             target = food_group->getNext(target);
             image.setColor(target->color);
         }
@@ -127,17 +139,15 @@ void Insect::shout()
         // vector<Insect*> out;
         // copy_if(collided.begin(), collided.end(), back_inserter(out), [t = this->target](auto &elem)
         //              { return elem->target == t; });
-
+        std::vector<Insect *> tList;
         for (auto insect : collided)
         {
             Targets copy;
-            std::vector<Insect*> tList;
-
-            int i = 0;
             for (auto &[key, value] : targets)
             {
                 // if you have many targets only shout to a few of them
-                if (collided.size() < limit_shouts_when_above || random() % (collided.size() / num_shouted_to_when_limited) == 0)
+                if (//last_target == insect->target && 
+                (collided.size() < limit_shouts_when_above || random() % (collided.size() / num_shouted_to_when_limited) == 0))
                 {
                     if (std::count(tList.begin(), tList.end(), insect) == 0)
                     {
@@ -145,7 +155,7 @@ void Insect::shout()
                     }
                     copy[key] = value + shout_distance;
                 }
-                i++;
+                
             }
             insect->recieve_shout(copy, position);
         }

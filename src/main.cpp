@@ -43,6 +43,7 @@ int main(int argc, char *args[])
             // The insect that will be moving around on the screen
             Group<Insect *> insects;
             Group<Food*> foods;
+            insects.reserve(num_insects);
             // Insect insects[100];
 
             
@@ -63,7 +64,7 @@ int main(int argc, char *args[])
             while (!quit)
             {
                 Uint64 start = SDL_GetPerformanceCounter();
-                
+                // _rdtsc();
 
                 handle_events();
                 

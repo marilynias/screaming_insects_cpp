@@ -45,7 +45,8 @@ public:
     T at(int i){return vector<T>::at(i);};
     typename vector<T>::iterator begin() { return vector<T>::begin(); };
     typename vector<T>::iterator end() { return vector<T>::end(); };
-    int size() { return vector<T>::size(); }
+    int size() { return vector<T>::size(); };
+    void reserve(std::size_t __n) { return vector<T>::reserve(__n); };
 
     void draw()
     {

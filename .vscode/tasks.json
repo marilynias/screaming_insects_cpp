@@ -6,8 +6,9 @@
             "command": "/usr/bin/g++",
             "args": [
                 "-fdiagnostics-color=always",
+                "-pg",
                 "-g",
-                "${workspaceFolder}/**.cpp",
+                "${workspaceFolder}/src/**.cpp",
                 "-o",
                 "${workspaceFolder}/main.exe",
                 "-lSDL2_image",
