@@ -1,0 +1,1 @@
+gprof main.exe | python3 -m gprof2dot -w | dot -Tpng -o output.png

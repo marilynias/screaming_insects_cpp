@@ -1,40 +1,15 @@
+#include "texture.h"
+#include "classes.h"
+#include "vals.h"
+
 #include <SDL.h>
 #include <SDL_image.h>
-#include <stdlib.h>
 #include <string>
+#include <stdio.h>
 
+
+// class Color;
 // Texture wrapper class
-class LTexture
-{
-public:
-    // Initializes variables
-    LTexture();
-
-    // Deallocates memory
-    ~LTexture();
-
-    // Loads image at specified path
-    bool loadFromFile(std::string path);
-
-    // Deallocates texture
-    void free();
-
-    // Renders texture at given point
-    void render(int x, int y);
-
-    // Gets image dimensions
-    int getWidth();
-    int getHeight();
-
-private:
-    // The actual hardware texture
-    SDL_Texture *mTexture;
-
-    // Image dimensions
-    int mWidth;
-    int mHeight;
-};
-
 LTexture::LTexture()
 {
     // Initialize
@@ -66,7 +41,8 @@ bool LTexture::loadFromFile(std::string path)
     else
     {
         // Color key image
-        SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
+        SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0x00, 0x00, 0x00));
+
         // Create texture from surface pixels
         newTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
         if (newTexture == NULL)
@@ -101,6 +77,56 @@ void LTexture::free()
     }
 }
 
-class Insect
+void LTexture::setColor(Uint8 red, Uint8 green, Uint8 blue)
 {
-};
+    // Modulate texture rgb
+    SDL_SetTextureColorMod(mTexture, red, green, blue);
+}
+
+void LTexture::setColor(Color color)
+{
+    // Modulate texture rgb
+    SDL_SetTextureColorMod(mTexture, color[0], color[1], color[2]);
+}
+
+void LTexture::setBlendMode(SDL_BlendMode blending)
+{
+    // Set blending function
+    SDL_SetTextureBlendMode(mTexture, blending);
+}
+
+void LTexture::setAlpha(Uint8 alpha)
+{
+    // Modulate texture alpha
+    SDL_SetTextureAlphaMod(mTexture, alpha);
+}
+
+void LTexture::draw(int x, int y, int w, int h, SDL_Rect *clip, double angle, SDL_Point *center, SDL_RendererFlip flip)
+{
+    // Set rendering space and render to screen
+    SDL_Rect renderQuad = {
+        x,
+        y,
+        w ? w : mWidth,
+        h ? h : mHeight};
+
+    // Set clip rendering dimensions
+    if (clip != NULL)
+    {
+        renderQuad.w = clip->w;
+        renderQuad.h = clip->h;
+    }
+
+    // Render to screen
+    SDL_RenderCopy(gRenderer, mTexture, clip, &renderQuad);
+}
+
+int LTexture::getWidth()
+{
+    return mWidth;
+}
+
+int LTexture::getHeight()
+{
+    return mHeight;
+}
