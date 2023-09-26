@@ -24,9 +24,9 @@ class Food : public Sprite
 public:
     // Functions
     // Food() : Sprite(rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, 20){};
-    Food(int x = rand() % SCREEN_WIDTH, int y = rand() % SCREEN_HEIGHT, int radius = 0, Color color = colors.green); //: Sprite(x, y, radius) {}
+    Food(int x = rand() % SCREEN_WIDTH, int y = rand() % SCREEN_HEIGHT, int radius = 0, SDL_Color color = colors.green); //: Sprite(x, y, radius) {}
     void update();
-    Color color;
+    SDL_Color color;
 
     
 

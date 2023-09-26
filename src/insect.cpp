@@ -24,6 +24,7 @@ Insect::Insect(Group<Food *> &foodGrp,
     target = food_group->at(random()%food_group->size());
     image.setColor(target->color);
     set_drift();
+    speed = float(rand()) / float(RAND_MAX) + 3.f;
 
     for (auto i : foodGrp)
     {
@@ -61,40 +62,36 @@ void Insect::handleEvent(SDL_Event &e)
 void Insect::update()
 {
     move_direction.rotate(drift);
+    Sprite::move();
+    
 
-    // Move the dot in the direction with the speed of SPEED
-    move();
-    check_oob();
+    for (auto &[key, value] : targets)
+    {
+        value += speed;
+    }
     check_col_food();
 }
 
-void Insect::move()
-{
-    position += (move_direction * SPEED);
-    for (auto &[key, value] : targets)
-    {
-        value += SPEED;
-    }
-}
+
 
 void Insect::check_col_food()
 {
     // for (auto &&cSprite : food_group->groupCollide(*(this->getGroups()[0]), 0, 0))
     for (auto *sprite : food_group->spriteCollide(this, -1, -1))
     {
-        if(num_food == 2)
-        {
+        // if(num_food == 2)
+        // {
             move_direction.x = -move_direction.x;
             move_direction.y = -move_direction.y;
-        }
-        else if (abs(move_direction.x) > move_direction.y)
-        {
-            move_direction.y = -move_direction.y;
-        }
-        else if (abs(move_direction.y) > move_direction.x)
-        {
-            move_direction.x = -move_direction.x;
-        }
+        // }
+        // else if (abs(move_direction.x) > move_direction.y)
+        // {
+        //     move_direction.y = -move_direction.y;
+        // }
+        // else if (abs(move_direction.y) > move_direction.x)
+        // {
+        //     move_direction.x = -move_direction.x;
+        // }
 
         if (sprite == target)
         {
@@ -108,24 +105,7 @@ void Insect::check_col_food()
     }
 }
 
-void Insect::check_oob()
-{
-    // If the dot went too far to the left or right
-    if ((position.x < 0) || (position.x + image.getWidth() > SCREEN_WIDTH))
-    {
-        // Move back
-        move_direction.x = -move_direction.x;
-        set_drift();
-    }
 
-    // If the dot went too far up or down
-    if ((position.y < 0) || (position.y + image.getHeight() > SCREEN_HEIGHT))
-    {
-        // Move back
-        move_direction.y = -move_direction.y;
-        set_drift();
-    }
-}
 
 void Insect::shout()
 {
@@ -139,24 +119,25 @@ void Insect::shout()
         // vector<Insect*> out;
         // copy_if(collided.begin(), collided.end(), back_inserter(out), [t = this->target](auto &elem)
         //              { return elem->target == t; });
-        std::vector<Insect *> tList;
+        // std::vector<Insect *> tList;
+        Targets copy;
+        for (auto &[key, value] : targets)
+        {
+            // if you have many targets only shout to a few of them
+            // if (//last_target == insect->target &&
+            // (collided.size() < limit_shouts_when_above || random() % (collided.size() / num_shouted_to_when_limited) == 0))
+            // {
+            // if (std::count(tList.begin(), tList.end(), insect) == 0)
+            // {
+            //     tList.push_back(insect);
+            // }
+            copy[key] = value + shout_distance;
+            // }
+        }
+
         for (auto insect : collided)
         {
-            Targets copy;
-            for (auto &[key, value] : targets)
-            {
-                // if you have many targets only shout to a few of them
-                if (//last_target == insect->target && 
-                (collided.size() < limit_shouts_when_above || random() % (collided.size() / num_shouted_to_when_limited) == 0))
-                {
-                    if (std::count(tList.begin(), tList.end(), insect) == 0)
-                    {
-                        tList.push_back(insect);
-                    }
-                    copy[key] = value + shout_distance;
-                }
-                
-            }
+            
             insect->recieve_shout(copy, position);
         }
         _do_shout = false;
@@ -187,16 +168,16 @@ void Insect::handle_recieved_shouts()
         if ((_moveto_buffer.x != 0 || _moveto_buffer.y != 0))
         {
             move_direction = (_moveto_buffer - position).normalized();
-            SDL_RenderDrawLine(gRenderer, position.x, position.y, _moveto_buffer.x, _moveto_buffer.y);
+            // SDL_RenderDrawLine(gRenderer, position.x, position.y, _moveto_buffer.x, _moveto_buffer.y);
         }
     }
 
     //reset buffers
-    _targets_buffer = targets + SPEED;
+    _targets_buffer = targets + speed;
     _moveto_buffer.x = _moveto_buffer.y = 0;
 }
 
 void Insect::set_drift()
 {
-    drift = (float(rand()) / float(RAND_MAX) - .5) / 57.3;
+    drift = (float(rand()) / float(RAND_MAX) - .5) / 10.;
 }

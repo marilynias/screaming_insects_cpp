@@ -26,4 +26,4 @@ void place_food(Group<Food *> *foodGrp, int n, int rad);
 
 void DrawCircle(SDL_Renderer *renderer, int32_t centreX, int32_t centreY, int32_t radius);
 
-Color pop_random_color(Colors *clrs);
+SDL_Color pop_random_color(Colors *clrs);

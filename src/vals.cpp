@@ -27,6 +27,7 @@ float target_framerate = 32.;
 LTexture gDotTexture;
 
 
+LTexture gFpsTexture;
 
 Colors colors = {
     .black = {0, 0, 0},
@@ -44,6 +45,9 @@ Colors colors = {
         {255, 255, 0}}
 
 };
+
+auto c = TTF_Init();
+TTF_Font *gFont = TTF_OpenFont("media/free-open.ttf", 24);
 // {
 //     {"black", {0, 0, 0}},
 //     {"white", {255, 255, 255}},

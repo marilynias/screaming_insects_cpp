@@ -2,8 +2,6 @@
 #include "classes.h"
 #include "vals.h"
 
-#include <SDL.h>
-#include <SDL_image.h>
 #include <string>
 #include <stdio.h>
 
@@ -83,10 +81,10 @@ void LTexture::setColor(Uint8 red, Uint8 green, Uint8 blue)
     SDL_SetTextureColorMod(mTexture, red, green, blue);
 }
 
-void LTexture::setColor(Color color)
+void LTexture::setColor(SDL_Color color)
 {
     // Modulate texture rgb
-    SDL_SetTextureColorMod(mTexture, color[0], color[1], color[2]);
+    SDL_SetTextureColorMod(mTexture, color.r, color.b, color.g);
 }
 
 void LTexture::setBlendMode(SDL_BlendMode blending)
@@ -107,18 +105,17 @@ void LTexture::draw(int x, int y, int w, int h, SDL_Rect *clip, double angle, SD
     SDL_Rect renderQuad = {
         x,
         y,
-        w ? w : mWidth,
-        h ? h : mHeight};
-
-    // Set clip rendering dimensions
-    if (clip != NULL)
-    {
-        renderQuad.w = clip->w;
-        renderQuad.h = clip->h;
-    }
+        (w>0) ? w : mWidth,
+        (h>0) ? h : mHeight};
 
     // Render to screen
     SDL_RenderCopy(gRenderer, mTexture, clip, &renderQuad);
+}
+
+void LTexture::draw(SDL_Rect *renderQuad, SDL_Rect *clip, double angle, SDL_Point *center, SDL_RendererFlip flip)
+{
+    // Render to screen
+    SDL_RenderCopy(gRenderer, mTexture, clip, renderQuad);
 }
 
 int LTexture::getWidth()
@@ -129,4 +126,38 @@ int LTexture::getWidth()
 int LTexture::getHeight()
 {
     return mHeight;
+}
+
+bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor)
+{
+    // Get rid of preexisting texture
+    free();
+    auto txt = (" " + (textureText) + "asd ").c_str();
+    // Render text surface
+    SDL_Surface *textSurface = TTF_RenderText_Solid(gFont, txt, textColor);
+    if (textSurface == NULL)
+    {
+        printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
+    }
+    else
+    {
+        // Create texture from surface pixels
+        mTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
+        if (mTexture == NULL)
+        {
+            printf("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
+        }
+        else
+        {
+            // Get image dimensions
+            mWidth = textSurface->w;
+            mHeight = textSurface->h;
+        }
+
+        // Get rid of old surface
+        SDL_FreeSurface(textSurface);
+    }
+
+    // Return success
+    return mTexture != NULL;
 }

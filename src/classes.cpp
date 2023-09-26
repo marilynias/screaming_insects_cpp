@@ -41,15 +41,16 @@ Targets Targets::operator-=(const int &right)
     return *this;
 };
 
-Food::Food(int x, int y, int radius, Color color) : Sprite(x, y, radius)
+Food::Food(int x, int y, int radius, SDL_Color color) : Sprite(x, y, radius)
 {
     image.setColor(color);
     this-> color = color;
+    speed = .5;
 };
 
 void Food::update()
 {
-    
+    move();
     
 }
 

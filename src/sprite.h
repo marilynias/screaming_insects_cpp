@@ -30,18 +30,18 @@ public:
 
     auto getGroups(){return groups;};
 
-    Vector2<float> get_position() { return position; }
-
     int radius;
-    
+    Vector2<float> position;
 
 protected:
     // Vals
     // The X and Y offsets of the dot
-    Vector2<float> position;
+    
     Vector2<float> move_direction;
+    float speed;
 
-    virtual void move(){};
+    virtual void move();
+    void check_oob();
 
     // Vals
     // The move_direction of the dot

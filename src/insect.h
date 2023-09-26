@@ -16,9 +16,9 @@ class Food;
 class Insect : public Sprite
 {
 private:
-    void move();
+    // void move();
     void check_col_food();
-    void check_oob();
+    
     void set_drift();
 
     Group<Food *> *food_group;
@@ -32,7 +32,7 @@ private:
     bool _do_shout = false;
 
     // variable speeds helps against clumping
-    const float SPEED = float(rand()) / float(RAND_MAX) + 3;
+    
     
 
     vector<Group<Insect *> *> groups;

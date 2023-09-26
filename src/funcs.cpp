@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <math.h>
+#include <SDL_ttf.h>
 
 using std::map, std::string, std::vector, std::cout, std::stoi;
 
@@ -106,6 +107,9 @@ void handle_events()
 
 bool init()
 {
+    // seed for debug
+    std::srand(124524);
+
     // Initialization flag
     bool success = true;
 
@@ -118,47 +122,46 @@ bool init()
         printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
         success = false;
     }
-    else
+    // Set texture filtering to linear
+    if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
     {
-        // Set texture filtering to linear
-        if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
-        {
-            printf("Warning: Linear texture filtering not enabled!");
-        }
-
-        // Create window
-        gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-        if (gWindow == NULL)
-        {
-            printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
-            success = false;
-        }
-        else
-        {
-            // Create vsynced renderer for window
-            gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
-            if (gRenderer == NULL)
-            {
-                printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
-                success = false;
-            }
-            else
-            {
-                // Initialize renderer color
-                SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-
-                // Initialize PNG loading
-                int imgFlags = IMG_INIT_PNG;
-                if (!(IMG_Init(imgFlags) & imgFlags))
-                {
-                    printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
-                    success = false;
-                }
-            }
-        }
+        printf("Warning: Linear texture filtering not enabled!");
     }
 
-    srand((unsigned)time(NULL));
+    // Create window
+    gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    if (gWindow == NULL)
+    {
+        printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
+        success = false;
+    }
+    // Create vsynced renderer for window
+    gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+    if (gRenderer == NULL)
+    {
+        printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
+        success = false;
+    }
+
+    // Initialize renderer color
+    SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
+    // Initialize PNG loading
+    int imgFlags = IMG_INIT_PNG;
+    if (!(IMG_Init(imgFlags) & imgFlags))
+    {
+        printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+        success = false;
+    }
+
+    // Initialize SDL_ttf
+    if (TTF_Init() == -1)
+    {
+        printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+        success = false;
+    }
+
+    // srand((unsigned)time(NULL));
 
     return success;
 }
@@ -168,6 +171,20 @@ bool loadMedia()
     // Loading success flag
     bool success = true;
 
+    gFont = TTF_OpenFont("media/free-open.ttf", 24);
+    if (gFont == NULL)
+    {
+        printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
+        success = false;
+    }
+    else
+    {
+        if (!gFpsTexture.loadFromRenderedText(" 0 ", colors.black))
+        {
+            printf("Failed to render text texture!\n");
+            success = false;
+        }
+    }
     // Load dot texture
     if (!gDotTexture.loadFromFile("media/circle.bmp"))
     {
@@ -182,14 +199,17 @@ void close()
 {
     // Free loaded images
     gDotTexture.free();
+    TTF_CloseFont(gFont);
 
     // Destroy window
     SDL_DestroyRenderer(gRenderer);
     SDL_DestroyWindow(gWindow);
     gWindow = NULL;
     gRenderer = NULL;
+    gFont=NULL;
 
     // Quit SDL subsystems
+    TTF_Quit();
     IMG_Quit();
     SDL_Quit();
 }
@@ -201,10 +221,11 @@ void place_food(Group<Food *> *foodGrp, int n, int r)
 
     for (int i = 0; i<n; i++)
     {
+        // printf("%i \n", rand());
         double t = min_rad*i;
         float x = (r * cos(t)) + (SCREEN_WIDTH / 2) - food_rad;
         float y = (r * sin(t)) + (SCREEN_HEIGHT / 2) - food_rad;
-        Color color = pop_random_color(&clrs);
+        SDL_Color color = pop_random_color(&clrs);
         foodGrp->add(new Food(x, y, food_rad, color));
         // foodGrp.add(new Food(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, food_rad, colors["green"]));
         // foodGrp.add(new Food(SCREEN_WIDTH * 3 / 4, SCREEN_HEIGHT / 4, food_rad, colors["blue"]));
@@ -270,10 +291,11 @@ void DrawCircle(SDL_Renderer *renderer, int32_t centreX, int32_t centreY, int32_
     }
 }
 
-Color pop_random_color(Colors *clrs)
+SDL_Color pop_random_color(Colors *clrs)
 {
     int rnd = rand() % clrs->all_colors.size();
-    Color el = clrs->all_colors[rnd];
+    
+    SDL_Color el = clrs->all_colors[rnd];
     clrs->all_colors.erase(clrs->all_colors.begin() + rnd);
     return el;
 }

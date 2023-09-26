@@ -10,18 +10,18 @@
 #include <algorithm>
 #include <cmath>
 
-typedef std::array<Uint8, 3> Color;
+// typedef std::array<Uint8, 3> SDL_Color;
 
 struct Colors
 {
-    Color black = {0, 0, 0};
-    Color white = {255, 255, 255};
-    Color red = {255, 0, 0};
-    Color green = {0, 255, 0};
-    Color blue = {0, 0, 255};
-    Color yellow = {255, 255, 0};
-    std::vector<Color> all_colors;
-    Color random();
+    SDL_Color black = {0, 0, 0};
+    SDL_Color white = {255, 255, 255};
+    SDL_Color red = {255, 0, 0};
+    SDL_Color green = {0, 255, 0};
+    SDL_Color blue = {0, 0, 255};
+    SDL_Color yellow = {255, 255, 0};
+    std::vector<SDL_Color> all_colors;
+    SDL_Color random();
 } extern colors;
 
 // Screen dimension constants
@@ -43,9 +43,9 @@ extern SDL_Window *gWindow;
 // The window renderer
 extern SDL_Renderer *gRenderer;
 
+extern TTF_Font *gFont;
 extern LTexture gDotTexture;
-
-extern TTF_Font *Sans;
+extern LTexture gFpsTexture;
 
 // Main loop flag
 extern bool quit;

@@ -4,8 +4,6 @@ and may not be redistributed without written permission.*/
 // Using SDL, SDL_image, standard IO, and strings
 // #include "vals.h"
 #include "funcs.h"
-// #include "group.h"
-// #include "sprite.h"
 #include "insect.h"
 #include "classes.h"
 
@@ -17,10 +15,12 @@ and may not be redistributed without written permission.*/
 #include <SDL_image.h>
 #include <SDL.h>
 
+
 using namespace std;
 
 int main(int argc, char *args[])
 {
+
     // Start up SDL and create window
     if (!init())
     {
@@ -28,6 +28,7 @@ int main(int argc, char *args[])
     }
     else
     {
+        
         // Load media
         if (!loadMedia())
         {
@@ -35,23 +36,20 @@ int main(int argc, char *args[])
         }
         else
         {
+            
+            
             Uint64 frame_time = SDL_GetTicks();
-            Uint64 end = 0;
-            float elapsed=0;
+            Uint64 end;
+            float elapsed;
+            int fps;
+            LTexture fps_counter;
             SDL_Rect dest = {0, 0, 20, 20};
             SDL_Texture *texture, *text;
             // The insect that will be moving around on the screen
             Group<Insect *> insects;
             Group<Food*> foods;
             insects.reserve(num_insects);
-            // Insect insects[100];
 
-            
-            // int i = 0;
-            // for (auto &[key, value] : colors)
-            // {
-            //     i++;
-            // }
             place_food(&foods, num_food, 200);
 
             for (int i = 0; i < num_insects; i++)
@@ -64,8 +62,6 @@ int main(int argc, char *args[])
             while (!quit)
             {
                 Uint64 start = SDL_GetPerformanceCounter();
-                // _rdtsc();
-
                 handle_events();
                 
                 // Clear screen to grey                
@@ -75,7 +71,7 @@ int main(int argc, char *args[])
                 // prepare different color for lines
                 SDL_SetRenderDrawColor(gRenderer, 0xff, 0xff, 0xff, 0xff);
 
-                DrawCircle(gRenderer, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 200);
+                // DrawCircle(gRenderer, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 200);
 
                 insects.update();
                 foods.update();
@@ -94,19 +90,24 @@ int main(int argc, char *args[])
 
                 //fps counter
                 frame_time = SDL_GetTicks() - frame_time;
-                float fps = (frame_time > 0) ? 1000.0f / frame_time : 0.0f;
-                // SDL_Color foreground = {0, 0, 0};
-                // SDL_Color foreground = {0, 0, 0};
-                // SDL_Surface *text_surf = TTF_RenderText(Sans, to_string(end).c_str(), {0, 0, 0}, {255, 255, 255});
-                // text = SDL_CreateTextureFromSurface(gRenderer, text_surf);
-                // SDL_RenderCopy(gRenderer, text, NULL, &dest);
+                // float fps = (frame_time > 0) ? 1000.0f / frame_time : 0.0f;
+                fps = SDL_GetPerformanceFrequency();
+                std::string rstring = to_string(fps);
+                gFpsTexture.loadFromRenderedText(to_string(fps), colors.green);
+                gFpsTexture.draw(0,0);
 
                 // Update screen
                 SDL_RenderPresent(gRenderer);
-                end = SDL_GetPerformanceCounter();
-                elapsed = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
+                // end = SDL_GetPerformanceCounter();
+                // elapsed = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
                 // float waitfor = floor(1000.f / 120.f - elapsed);
-                SDL_Delay(max(floor(1000.f / target_framerate - elapsed), 0.f));
+                // SDL_Delay(max(floor(1000.f / target_framerate - elapsed), 0.f));
+                Uint64 frame_time = SDL_GetTicks();
+                //debug
+                // if (frame_time > 200000)
+                // {
+                //     quit=true;
+                // }
             }
         }
     }
