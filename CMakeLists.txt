@@ -1,34 +1,14 @@
-# cmake_minimum_required(VERSION 3.20)
-# project(InsectSim)
-# file(GLOB helloworld_SRC
-#     #  "src/*.h"
-#      "src/*.cpp"
-# )
-# find_package(SDL2 REQUIRED)
-# include_directories(
-#   ${CMAKE_SOURCE_DIR}/src
-#   ${CMAKE_SOURCE_DIR}/include
-#   ${SDL2_INCLUDE_DIRS}
-# )
-# add_executable(InsectSim ${helloworld_SRC})
-
-# # target_include_directories(app PRIVATE src)
-# # target_sources(app src/*.cpp)
-
 cmake_minimum_required(VERSION 3.7)
-project(SDL2Test)
+project(InsectSim)
 
-file(GLOB helloworld_SRC
-    #  "src/*.h"
+
+SET(CMAKE_CXX_FLAGS, "-O3")
+
+file(GLOB my_SRC
      "src/*.cpp"
 )
 
-
-# include_directories(SDL2Test 
-#     ${SDL2_INCLUDE_DIRS}
-#     ${CMAKE_SOURCE_DIR}/src)
-
-add_executable(${PROJECT_NAME} ${helloworld_SRC})
+add_executable(${PROJECT_NAME} ${my_SRC})
 
 INCLUDE(FindPkgConfig)
 
