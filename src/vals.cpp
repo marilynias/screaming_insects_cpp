@@ -10,6 +10,9 @@ int num_shouted_to_when_limited = limit_shouts_when_above;
 int food_rad = 15;
 int food_spawn_rad = 200;
 int num_food = 2;
+float speed_food=0.5f;
+int speed_insect=3;
+int seek_mode = 0;
 
 // Screen dimension constants
 int SCREEN_WIDTH = 640;

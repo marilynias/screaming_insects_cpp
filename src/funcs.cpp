@@ -68,9 +68,21 @@ auto get_config()
             {
                 num_food = stoi(value);
             }
+            else if (name == "speed_food")
+            {
+                speed_food = stof(value);
+            }
             else if (name == "food_spawn_rad")
             {
                 food_spawn_rad = stoi(value);
+            }
+            else if (name == "speed_insect")
+            {
+                speed_insect = stoi(value);
+            }
+            else if (name == "seek_mode")
+            {
+                seek_mode = stoi(value);
             }
         }
     }

@@ -21,6 +21,8 @@ private:
     
     void set_drift();
 
+    void set_target(Food* target);
+
     Group<Food *> *food_group;
     Food *target;
     Food *last_target;
@@ -56,5 +58,7 @@ public:
 
     void add_group(Group<Insect *> *group) {groups.push_back(group);}
 };
+
+
 
 #endif

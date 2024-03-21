@@ -24,7 +24,7 @@ Insect::Insect(Group<Food *> &foodGrp,
     target = food_group->at(random()%food_group->size());
     image.setColor(target->color);
     set_drift();
-    speed = float(rand()) / float(RAND_MAX) + 3.f;
+    speed = float(rand()) / float(RAND_MAX) + (float)speed_insect;
 
     for (auto i : foodGrp)
     {
@@ -93,13 +93,12 @@ void Insect::check_col_food()
         //     move_direction.x = -move_direction.x;
         // }
 
-        if (sprite == target)
+        if (sprite == target or (seek_mode == 1 && sprite != last_target))
         {
             // cout << "Hit my Target!!\n";
             targets[target] = 0;
-            last_target = target;
-            target = food_group->getNext(target);
-            image.setColor(target->color);
+            last_target = sprite;
+            set_target(food_group->getNext(sprite));
         }
         _do_shout = true;
     }
@@ -146,12 +145,20 @@ void Insect::shout()
 
 void Insect::recieve_shout(Targets rTargets, Vector2<float> rDirection)
 {
-    for (auto &[key, value] : rTargets)
+    for (auto &[_target, _distance] : rTargets)
     {
-        if (value < _targets_buffer[key])
+        if (_distance < _targets_buffer[_target])
         {
-            _targets_buffer[key] = value;
-            if (key == target){_moveto_buffer = rDirection;}
+            _targets_buffer[_target] = _distance;
+
+            if (_target != target && _target != last_target && seek_mode == 1)
+            {
+                set_target(_target);
+            }
+            if (_target == target)
+            {
+                _moveto_buffer = rDirection;
+            }
         }
     }
 }
@@ -180,4 +187,10 @@ void Insect::handle_recieved_shouts()
 void Insect::set_drift()
 {
     drift = (float(rand()) / float(RAND_MAX) - .5) / 10.;
+}
+
+void Insect::set_target(Food *_target)
+{
+    target = _target;
+    image.setColor(_target->color);
 }

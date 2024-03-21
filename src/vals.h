@@ -30,12 +30,15 @@ extern int SCREEN_HEIGHT;
 
 // values to tinker (insect related)
 extern int num_insects;
+extern int speed_insect;
 extern int shout_distance;
 extern int limit_shouts_when_above;
 extern int num_shouted_to_when_limited;
 extern int food_rad;
 extern int food_spawn_rad;
 extern int num_food;
+extern float speed_food;
+extern int seek_mode;
 
 // The window we'll be rendering to
 extern SDL_Window *gWindow;

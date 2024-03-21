@@ -45,7 +45,7 @@ Food::Food(int x, int y, int radius, SDL_Color color) : Sprite(x, y, radius)
 {
     image.setColor(color);
     this-> color = color;
-    speed = .5;
+    speed = speed_food;
 };
 
 void Food::update()

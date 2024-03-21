@@ -15,7 +15,6 @@ and may not be redistributed without written permission.*/
 #include <SDL_image.h>
 #include <SDL.h>
 
-
 using namespace std;
 
 int main(int argc, char *args[])
@@ -36,8 +35,8 @@ int main(int argc, char *args[])
         }
         else
         {
-            
-            
+
+            srand(time(NULL));
             Uint64 frame_time = SDL_GetTicks();
             Uint64 end;
             float elapsed;
@@ -98,10 +97,10 @@ int main(int argc, char *args[])
 
                 // Update screen
                 SDL_RenderPresent(gRenderer);
-                // end = SDL_GetPerformanceCounter();
-                // elapsed = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
-                // float waitfor = floor(1000.f / 120.f - elapsed);
-                // SDL_Delay(max(floor(1000.f / target_framerate - elapsed), 0.f));
+                end = SDL_GetPerformanceCounter();
+                elapsed = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
+                float waitfor = floor(1000.f / 240.f - elapsed);
+                SDL_Delay(max(floor(1000.f / target_framerate - elapsed), 0.f));
                 Uint64 frame_time = SDL_GetTicks();
                 //debug
                 // if (frame_time > 200000)

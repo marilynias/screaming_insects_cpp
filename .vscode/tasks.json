@@ -14,8 +14,10 @@
               "${workspaceFolder}/main.exe",
               "-lSDL2_image",
               "-lSDL2_ttf",
+              "-lSDL2main",
+              "-lSDL2",
               "-I/usr/include/boost",
-              "`pkg-config sdl2 --cflags --libs`"
+              // "`pkg-config sdl2 --cflags --libs`"
             ],
             "options": {
                 "cwd": ""
@@ -40,8 +42,10 @@
             "${workspaceFolder}/main.exe",
             "-lSDL2_image",
             "-lSDL2_ttf",
+            "-lSDL2main",
+            "-lSDL2",
             "-I/usr/include/boost",
-            "`pkg-config sdl2 --cflags --libs`"
+            // "`pkg-config sdl2 --cflags --libs`"
           ],
           "options": {
             "cwd": ""
