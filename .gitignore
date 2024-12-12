@@ -4,3 +4,5 @@ perf.data*
 gmon*
 gprof*
 *.exe
+CMakeFiles/
+build/
