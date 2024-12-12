@@ -5,6 +5,7 @@ gmon*
 gprof*
 *.exe
 build/
+profiler.sh
 
 CMakeLists.txt.user
 CMakeCache.txt
