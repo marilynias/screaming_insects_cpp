@@ -30,7 +30,7 @@ Insect::Insect(Group<Food *> &foodGrp,
     {
         targets.insert(pair<Food*, int>(i, 1000));
     }
-    
+
 }
 
 Insect::Insect(Group<Food *> &foodGrp) : Insect(foodGrp, rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, 2)
@@ -61,9 +61,10 @@ void Insect::handleEvent(SDL_Event &e)
 
 void Insect::update()
 {
+    set_drift();
     move_direction.rotate(drift);
     Sprite::move();
-    
+
 
     for (auto &[key, value] : targets)
     {
@@ -81,8 +82,8 @@ void Insect::check_col_food()
     {
         // if(num_food == 2)
         // {
-            move_direction.x = -move_direction.x;
-            move_direction.y = -move_direction.y;
+        move_direction.x = -move_direction.x;
+        move_direction.y = -move_direction.y;
         // }
         // else if (abs(move_direction.x) > move_direction.y)
         // {
@@ -136,11 +137,11 @@ void Insect::shout()
 
         for (auto insect : collided)
         {
-            
+
             insect->recieve_shout(copy, position);
         }
         _do_shout = false;
-        }
+    }
 }
 
 void Insect::recieve_shout(Targets rTargets, Vector2<float> rDirection)
